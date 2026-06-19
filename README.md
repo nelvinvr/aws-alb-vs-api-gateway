@@ -31,7 +31,26 @@ Both architectures were able to:
 
 The final validation confirmed that records created through both ALB and API Gateway were stored in and retrieved from the same DynamoDB table.
 
+## Project Metrics
+
+- Services Used: 7 AWS Services
+- Lambda Functions: 4
+- DynamoDB Tables: 1
+- API Endpoints Tested: 4
+- Routing Methods Compared: 2
+- Validation Status: Successful
+  
 ## Architecture
+
+### Architecture Flow
+
+Client requests are routed through either:
+
+1. Amazon API Gateway using HTTP method-based routing.
+2. Application Load Balancer using path-based routing.
+
+Both services invoke AWS Lambda functions that interact with a shared Amazon DynamoDB table for data storage and retrieval.
+
 ![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc)
 ```mermaid
 flowchart TB
@@ -251,7 +270,7 @@ Observed configuration:
 * Uses path-based routing rules
 * Requires deployment into a VPC and associated subnets
 * Can route traffic to Lambda functions, EC2 instances, containers, and IP targets
-* Well suited for web applications and mixed workloads
+* Well-suited for web applications and mixed workloads
 
 ### Architectural Insight
 
@@ -272,6 +291,17 @@ Key differences between API Gateway and ALB:
 | Throttling | Built-in | Requires additional services |
 | Cost Model | Pay-per-request | Hourly + usage |
 | Best Use Case | APIs and microservices | Web applications and traffic routing |
+
+## Project Summary
+
+This project demonstrated two different AWS approaches for exposing serverless workloads:
+
+* API Gateway using method-based routing
+* Application Load Balancer using path-based routing
+
+Both architectures successfully integrated with AWS Lambda and DynamoDB.
+
+The lab highlighted important differences in networking, routing, security, scalability, and operational considerations that Solutions Architects should understand when designing cloud-native applications.
 
 ## Troubleshooting
 
@@ -309,19 +339,8 @@ Used AWS CloudShell and `curl` commands to perform end-to-end testing of all end
 
 Workshop resources should be removed or allowed to expire after testing to avoid unnecessary AWS charges.
 
-## Project Summary
-
-This project demonstrated two different AWS approaches for exposing serverless workloads:
-
-* API Gateway using method-based routing
-* Application Load Balancer using path-based routing
-
-Both architectures successfully integrated with AWS Lambda and DynamoDB.
-
-The lab highlighted important differences in networking, routing, security, scalability, and operational considerations that Solutions Architects should understand when designing cloud-native applications.
-
 ## Author
 
 **Nelvin Robinson**
 
-AWS Solutions Architect learner and CloudWithRaj Cohort 8 participant.
+AWS Solutions Architect learner
