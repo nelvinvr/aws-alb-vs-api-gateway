@@ -86,6 +86,22 @@ Testing results will be added after validating the four endpoints using AWS Clou
 Screenshots will be added throughout the implementation.
 
 ## ALB vs API Gateway Comparison
+### VPC Requirement
+
+One of the key differences discovered during this lab was networking.
+
+**Application Load Balancer (ALB)** must be deployed into a customer VPC and attached to one or more subnets across Availability Zones.
+
+![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc.png)
+
+Observed configuration:
+
+- VPC attached
+- Multiple Availability Zones
+- Multiple subnets
+- Internet-facing deployment
+
+**API Gateway**, on the other hand, is a managed AWS service and does not require deployment into customer VPC subnets.
 
 | Category | API Gateway | Application Load Balancer |
 |---|---|---|
