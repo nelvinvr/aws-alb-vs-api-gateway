@@ -79,7 +79,22 @@ Documentation will be added after completing the ALB listener configuration.
 
 ### Part 3 — Endpoint Testing
 
-Testing results will be added after validating the four endpoints using AWS CloudShell.
+### ALB Browse Endpoint
+
+Command:
+
+```bash
+curl "http://<ALB-DNS>/browse"
+```
+
+Result:
+
+- Request successfully routed through ALB
+- Browse Lambda executed
+- DynamoDB records returned
+- 3 items retrieved
+
+![ALB Browse Test](screenshots/09-cloudshell-alb-browse-test)
 
 ## Screenshots
 
@@ -92,7 +107,7 @@ One of the key differences discovered during this lab was networking.
 
 **Application Load Balancer (ALB)** must be deployed into a customer VPC and attached to one or more subnets across Availability Zones.
 
-![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc.png)
+![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc)
 
 Observed configuration:
 
