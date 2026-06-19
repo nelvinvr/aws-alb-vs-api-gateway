@@ -44,14 +44,13 @@ The final validation confirmed that records created through both ALB and API Gat
 
 ### Architecture Flow
 
-Client requests are routed through either:
+This project compares two serverless request-routing architectures:
 
-1. Amazon API Gateway using HTTP method-based routing.
-2. Application Load Balancer using path-based routing.
+1. API Gateway → Lambda → DynamoDB
+2. Application Load Balancer → Lambda → DynamoDB
 
-Both services invoke AWS Lambda functions that interact with a shared Amazon DynamoDB table for data storage and retrieval.
+API Gateway uses HTTP method-based routing, while Application Load Balancer uses path-based routing. Both architectures interact with the same DynamoDB table to store and retrieve application data.
 
-![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc.jpg)
 ```mermaid
 flowchart TB
     User1[Client] -->|GET and POST /items| APIGW[Amazon API Gateway]
@@ -343,4 +342,4 @@ Workshop resources should be removed or allowed to expire after testing to avoid
 
 **Nelvin Robinson**
 
-AWS Solutions Architect learner
+AWS Solutions Architect learner and aspiring Cloud Infrastructure & Solutions Architect professional.
