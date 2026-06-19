@@ -96,6 +96,24 @@ Result:
 
 ![ALB Browse Test](screenshots/09-cloudshell-alb-browse-test)
 
+### ALB Insert Endpoint
+
+Command:
+
+```bash
+curl -X POST "http://<ALB-DNS>/insert" \
+-H "Content-Type: application/json" \
+-d '{"name":"ALB Test Item","description":"Testing ALB insert"}'
+```
+
+Result:
+
+- Request routed through ALB
+- Insert Lambda executed successfully
+- New DynamoDB item created
+
+![ALB Insert Test](screenshots/10-cloudshell-alb-insert-test)
+
 ## Screenshots
 
 Screenshots will be added throughout the implementation.
