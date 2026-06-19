@@ -15,18 +15,24 @@ This hands-on AWS project compares two methods of exposing serverless backend fu
 
 Both architectures use Lambda functions to browse and insert items stored in a shared Amazon DynamoDB table.
 
-The project demonstrates:
+## Project Outcome
 
-- HTTP method-based routing with API Gateway
-- Path-based routing with an Application Load Balancer
-- Lambda proxy integration
-- ALB Lambda target groups
-- API deployment stages
-- Endpoint testing with AWS CloudShell and `curl`
-- Architectural differences between API Gateway and ALB
+Successfully configured and tested two different serverless request-routing architectures on AWS:
+
+* Amazon API Gateway → AWS Lambda → DynamoDB
+* Application Load Balancer → AWS Lambda → DynamoDB
+
+Both architectures were able to:
+
+* Retrieve records from DynamoDB
+* Insert new records into DynamoDB
+* Handle HTTP requests successfully
+* Demonstrate different routing and networking models
+
+The final validation confirmed that records created through both ALB and API Gateway were stored in and retrieved from the same DynamoDB table.
 
 ## Architecture
-
+![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc)
 ```mermaid
 flowchart TB
     User1[Client] -->|GET and POST /items| APIGW[Amazon API Gateway]
@@ -55,31 +61,54 @@ flowchart TB
 
 ## Project Objectives
 
-- [ ] Configure the missing API Gateway `POST /items` method
-- [ ] Enable Lambda proxy integration
-- [ ] Deploy the REST API to the `prod` stage
-- [ ] Add an ALB listener rule for `/insert*`
-- [ ] Route `/insert*` requests to the Insert Lambda target group
-- [ ] Test the ALB browse endpoint
-- [ ] Test the ALB insert endpoint
-- [ ] Test the API Gateway GET endpoint
-- [ ] Test the API Gateway POST endpoint
-- [ ] Compare ALB and API Gateway behaviour
-- [ ] Document troubleshooting and lessons learned
+- [x] Configure the missing API Gateway `POST /items` method
+- [x] Enable Lambda proxy integration
+- [x] Deploy the REST API to the `prod` stage
+- [x] Add an ALB listener rule for `/insert*`
+- [x] Route `/insert*` requests to the Insert Lambda target group
+- [x] Test the ALB browse endpoint
+- [x] Test the ALB insert endpoint
+- [x] Test the API Gateway GET endpoint
+- [x] Test the API Gateway POST endpoint
+- [x] Compare ALB and API Gateway behaviour
+- [x] Document troubleshooting and lessons learned
 
 ## Implementation
 
 ### Part 1 — API Gateway Configuration
 
-Documentation will be added after completing the API Gateway configuration.
+Tasks completed:
+
+1. Opened the existing REST API.
+2. Selected the `/items` resource.
+3. Created a new `POST` method.
+4. Enabled Lambda Proxy Integration.
+5. Connected the method to the Insert Lambda function.
+6. Deployed the API to the `prod` stage.
+
+Result:
+
+* GET requests returned DynamoDB records.
+* POST requests successfully created new items.
 
 ### Part 2 — Application Load Balancer Configuration
 
-Documentation will be added after completing the ALB listener configuration.
+Tasks completed:
+
+1. Opened the HTTP:80 listener.
+2. Reviewed the existing `/browse*` rule.
+3. Added a new `/insert*` path rule.
+4. Forwarded traffic to the Insert Lambda target group.
+5. Assigned rule priority 2.
+
+Result:
+
+* `/browse` requests routed to Browse Lambda.
+* `/insert` requests routed to Insert Lambda.
 
 ### Part 3 — Endpoint Testing
 
-### ALB Browse Endpoint
+#### ALB Browse Endpoint
 
 Command:
 
@@ -96,7 +125,7 @@ Result:
 
 ![ALB Browse Test](screenshots/09-cloudshell-alb-browse-test)
 
-### ALB Insert Endpoint
+#### ALB Insert Endpoint
 
 Command:
 
@@ -114,7 +143,7 @@ Result:
 
 ![ALB Insert Test](screenshots/10-cloudshell-alb-insert-test)
 
-### API Gateway GET Endpoint
+#### API Gateway GET Endpoint
 
 Command:
 
@@ -131,9 +160,54 @@ Result:
 
 ![API Gateway GET Test](screenshots/11-cloudshell-api-get-test)
 
+#### API Gateway POST Endpoint
+
+Command:
+
+```bash
+curl -X POST "https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/items" \
+-H "Content-Type: application/json" \
+-d '{"name":"API Gateway Test Item","description":"Testing API Gateway insert"}'
+```
+
+Result:
+
+* API Gateway POST method executed successfully
+* Lambda function inserted a new record
+* DynamoDB write operation completed successfully
+
+![API Gateway POST Test](screenshots/12-cloudshell-api-post-test)
+
+#### Final Validation
+
+A final GET request confirmed that:
+
+- Original sample records existed
+- ALB-created records existed
+- API Gateway-created records existed
+
+Total records returned: 5
+
+![Final Validation](screenshots/13-final-dynamodb-items)
+
 ## Screenshots
 
-Screenshots will be added throughout the implementation.
+| Screenshot | Description                                     |
+| ---------- | ----------------------------------------------- |
+| 01         | API Gateway API Overview                        |
+| 02         | API Gateway Resources Before POST Configuration |
+| 03         | API Gateway POST Method Deployment              |
+| 04         | ALB Listener Rules Before Insert Configuration  |
+| 05         | ALB Insert Rule Configuration                   |
+| 06         | Final ALB Listener Rules                        |
+| 07         | ALB VPC and Subnet Configuration                |
+| 08         | CloudShell Environment Validation               |
+| 09         | ALB Browse Endpoint Test                        |
+| 10         | ALB Insert Endpoint Test                        |
+| 11         | API Gateway GET Endpoint Test                   |
+| 12         | API Gateway POST Endpoint Test                  |
+| 13         | Final DynamoDB Validation                       |
+
 
 ## ALB vs API Gateway Comparison
 ### VPC Requirement
@@ -165,15 +239,86 @@ Observed configuration:
 
 ## Key Learnings
 
-To be completed after the workshop.
+### API Gateway
+
+* Supports method-based routing (GET, POST, PUT, DELETE)
+* HTTPS is enabled by default
+* Does not require deployment into a customer VPC
+* Provides built-in throttling and API management capabilities
+
+### Application Load Balancer
+
+* Uses path-based routing rules
+* Requires deployment into a VPC and associated subnets
+* Can route traffic to Lambda functions, EC2 instances, containers, and IP targets
+* Well suited for web applications and mixed workloads
+
+### Architectural Insight
+
+Although both services can invoke Lambda functions, they are designed for different use cases.
+
+API Gateway focuses on API management and serverless applications, while ALB focuses on application traffic routing and load balancing.
+
+## Interview Takeaways
+
+Key differences between API Gateway and ALB:
+
+| Feature | API Gateway | ALB |
+|----------|------------|-----|
+| Routing | HTTP methods and resources | Path-based routing |
+| HTTPS | Enabled by default | Requires ACM certificate |
+| VPC Requirement | Not required | Required |
+| Backend Targets | Lambda and AWS services | Lambda, EC2, Containers |
+| Throttling | Built-in | Requires additional services |
+| Cost Model | Pay-per-request | Hourly + usage |
+| Best Use Case | APIs and microservices | Web applications and traffic routing |
 
 ## Troubleshooting
 
-To be completed during the workshop.
+### API Gateway POST Not Available
+
+**Issue**
+
+The `/items` resource only had GET configured.
+
+**Resolution**
+
+Created a POST method, enabled Lambda Proxy Integration, and deployed the API to the `prod` stage.
+
+### ALB Insert Endpoint Not Working
+
+**Issue**
+
+Requests to `/insert` were not routed correctly.
+
+**Resolution**
+
+Created a new listener rule with path pattern `/insert*` and forwarded requests to the Insert Lambda target group.
+
+### Endpoint Validation
+
+**Issue**
+
+Needed to verify that both architectures could access the same DynamoDB table.
+
+**Resolution**
+
+Used AWS CloudShell and `curl` commands to perform end-to-end testing of all endpoints.
 
 ## Cleanup
 
 Workshop resources should be removed or allowed to expire after testing to avoid unnecessary AWS charges.
+
+## Project Summary
+
+This project demonstrated two different AWS approaches for exposing serverless workloads:
+
+* API Gateway using method-based routing
+* Application Load Balancer using path-based routing
+
+Both architectures successfully integrated with AWS Lambda and DynamoDB.
+
+The lab highlighted important differences in networking, routing, security, scalability, and operational considerations that Solutions Architects should understand when designing cloud-native applications.
 
 ## Author
 
