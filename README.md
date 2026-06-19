@@ -51,7 +51,7 @@ Client requests are routed through either:
 
 Both services invoke AWS Lambda functions that interact with a shared Amazon DynamoDB table for data storage and retrieval.
 
-![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc)
+![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc.jpg)
 ```mermaid
 flowchart TB
     User1[Client] -->|GET and POST /items| APIGW[Amazon API Gateway]
@@ -142,7 +142,7 @@ Result:
 - DynamoDB records returned
 - 3 items retrieved
 
-![ALB Browse Test](screenshots/09-cloudshell-alb-browse-test)
+![ALB Browse Test](screenshots/09-cloudshell-alb-browse-test.jpg)
 
 #### ALB Insert Endpoint
 
@@ -160,7 +160,7 @@ Result:
 - Insert Lambda executed successfully
 - New DynamoDB item created
 
-![ALB Insert Test](screenshots/10-cloudshell-alb-insert-test)
+![ALB Insert Test](screenshots/10-cloudshell-alb-insert-test.jpg)
 
 #### API Gateway GET Endpoint
 
@@ -177,7 +177,7 @@ Result:
 - DynamoDB items returned
 - Previously inserted ALB records were visible
 
-![API Gateway GET Test](screenshots/11-cloudshell-api-get-test)
+![API Gateway GET Test](screenshots/11-cloudshell-api-get-test.jpg)
 
 #### API Gateway POST Endpoint
 
@@ -195,7 +195,7 @@ Result:
 * Lambda function inserted a new record
 * DynamoDB write operation completed successfully
 
-![API Gateway POST Test](screenshots/12-cloudshell-api-post-test)
+![API Gateway POST Test](screenshots/12-cloudshell-api-post-test.jpg)
 
 #### Final Validation
 
@@ -207,7 +207,7 @@ A final GET request confirmed that:
 
 Total records returned: 5
 
-![Final Validation](screenshots/13-final-dynamodb-items)
+![Final Validation](screenshots/13-final-dynamodb-items.jpg)
 
 ## Screenshots
 
@@ -235,7 +235,7 @@ One of the key differences discovered during this lab was networking.
 
 **Application Load Balancer (ALB)** must be deployed into a customer VPC and attached to one or more subnets across Availability Zones.
 
-![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc)
+![ALB VPC Configuration](screenshots/07-alb-network-mapping-vpc.jpg)
 
 Observed configuration:
 
