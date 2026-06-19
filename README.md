@@ -114,6 +114,23 @@ Result:
 
 ![ALB Insert Test](screenshots/10-cloudshell-alb-insert-test)
 
+### API Gateway GET Endpoint
+
+Command:
+
+```bash
+curl "https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/items"
+```
+
+Result:
+
+- API Gateway routed the request using the GET method
+- Browse Lambda executed successfully
+- DynamoDB items returned
+- Previously inserted ALB records were visible
+
+![API Gateway GET Test](screenshots/11-cloudshell-api-get-test)
+
 ## Screenshots
 
 Screenshots will be added throughout the implementation.
